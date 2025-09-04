@@ -1,1 +1,1 @@
-# Datamaskiners-virkem-te-og-programmering-UiT
+# Datamaskiners-virkemåte-og-programmering-UiT
