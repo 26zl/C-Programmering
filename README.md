@@ -1,1 +1,1 @@
-# Datamaskiners virkemåte og programmering UiT
+# Datamaskiners virkemåte og programmering
