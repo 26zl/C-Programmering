@@ -68,7 +68,7 @@ void bouncing_balls(SDL_Window *window)
         return;
     }
     /* Lifetime (in frames) for each ball before it disappears */
-    const unsigned int BALL_TTL_FRAMES = 8000;
+    const unsigned int BALL_TTL_FRAMES = 300;
     /* Spawn 10 balls with random speeds */
     const int NUM_BALLS = 10;
     for (int i = 0; i < NUM_BALLS; i++) {
@@ -160,6 +160,12 @@ void bouncing_balls(SDL_Window *window)
                 }
                 draw_object(ball);
             }
+
+            /* If no balls remain, stop the animation loop */
+            if (list_size(balls) == 0) {
+                running = 0;
+            }
+
             /* Reset iterator for next frame */
             list_resetiterator(it);
             SDL_UpdateWindowSurface(window);
@@ -211,12 +217,15 @@ int main(void)
     /* Start bouncing some balls */
     bouncing_balls(window);
 
+    /* Destroy the window now that we're done */
+    if (window) {
+        SDL_DestroyWindow(window);
+        window = NULL;
+    }
+
     /* Shut down SDL */
     SDL_Quit();
 
-    /* Wait a little bit jic something went wrong (so that printfs can be read) */
-    SDL_Delay(5000);
-    
     return 0;
 
     /* Upon an error, print message and quit properly */

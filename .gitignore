@@ -5,6 +5,8 @@
 # Prerequisites
 *.d
 *.idea/
+app/
+*.app/
 
 # Object files
 *.o
