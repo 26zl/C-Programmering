@@ -1,10 +1,9 @@
+/* Singly linked list implementation with a simple iterator interface. */
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
 
-/*
- * List implementation
- */
+/* Internal list node and list definitions. */
 
 typedef struct listnode listnode_t;
 
@@ -18,9 +17,7 @@ struct list {
     int numitems;
 };
 
-/*
- * Returns a newly created, empty list.
- */
+/* Return a newly created, empty list. */
 list_t *list_create(void)
 {
     list_t *list = malloc(sizeof(*list));
@@ -35,9 +32,7 @@ list_t *list_create(void)
     return list;
 }
 
-/*
- * Frees the list; list and nodes, but not the items it holds.
- */
+/* Free the list and its nodes, but not the stored items. */
 void list_destroy(list_t *list)
 {
     listnode_t *node;
@@ -56,9 +51,7 @@ void list_destroy(list_t *list)
     free(list);
 }
 
-/*
- * Adds an item first in the provided list.
- */
+/* Add an item to the front of the list. */
 void list_addfirst(list_t *list, void *item)
 {
     listnode_t *node;
@@ -78,9 +71,7 @@ void list_addfirst(list_t *list, void *item)
     list->numitems++;
 }
 
-/*
- * Adds an item last in the provided list.
- */
+/* Add an item to the end of the list. */
 void list_addlast(list_t *list, void *item)
 {
     listnode_t *node;
@@ -111,9 +102,7 @@ void list_addlast(list_t *list, void *item)
     list->numitems++;
 }
 
-/*
- * Removes an item from the provided list, only freeing the node.
- */
+/* Remove the first occurrence of the item from the list; does not free the item itself. */
 void list_remove(list_t *list, void *item)
 {
     listnode_t *node;
@@ -144,9 +133,7 @@ void list_remove(list_t *list, void *item)
     }
 }
 
-/*
- * Return the number of items in the list.
- */
+/* Return the number of items currently stored in the list. */
 int list_size(list_t *list)
 {
     return list ? list->numitems : 0;
@@ -154,18 +141,14 @@ int list_size(list_t *list)
 
 
 
-/*
- * Iterator implementation
- */
+/* Iterator implementation */
  struct list_iterator {
     listnode_t *next;
     list_t *list;
 };
 
 
-/*
- * Return a newly created list iterator for the given list.
- */
+/* Return a newly created list iterator for the given list. */
 list_iterator_t *list_createiterator(list_t *list)
 {
     list_iterator_t *iter = malloc(sizeof(*iter));
@@ -181,18 +164,14 @@ list_iterator_t *list_createiterator(list_t *list)
 }
 
 
-/*
- * Free the memory for the given list iterator.
- */
+/* Free the memory for the given list iterator. */
 void list_destroyiterator(list_iterator_t *iter)
 {
     free(iter);
 }
 
 
-/*
- * Move iterator to next item in list and return current.
- */
+/* Move iterator to next item in list and return the current item. */
 void *list_next(list_iterator_t *iter)
 {
     listnode_t *current;
@@ -208,9 +187,7 @@ void *list_next(list_iterator_t *iter)
 }
 
 
-/*
- * Let iterator point to first item in list again.
- */
+/* Reset iterator so it again points to the first item in the list. */
 void list_resetiterator(list_iterator_t *iter)
 {
     if (!iter) {

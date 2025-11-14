@@ -67,6 +67,8 @@ void bouncing_balls(SDL_Window *window)
         fprintf(stderr, "Failed to create ball list.\n");
         return;
     }
+    /* Lifetime (in frames) for each ball before it disappears */
+    const unsigned int BALL_TTL_FRAMES = 8000;
     /* Spawn 10 balls with random speeds */
     const int NUM_BALLS = 10;
     for (int i = 0; i < NUM_BALLS; i++) {
@@ -83,6 +85,8 @@ void bouncing_balls(SDL_Window *window)
         ball->ty     = (float)(rand() % usable_h) + 50.0f;
         ball->speedx = ((float)rand() / (float)RAND_MAX) * 100.0f - 50.0f; 
         ball->speedy = ((float)rand() / (float)RAND_MAX) * 80.0f  - 60.0f; 
+        /* Initialize per-ball time-to-live (TTL) */
+        ball->ttl    = BALL_TTL_FRAMES;
         list_addlast(balls, ball);
     }
 
@@ -119,6 +123,15 @@ void bouncing_balls(SDL_Window *window)
             /* Update and draw each ball */
             object_t *ball;
             while ((ball = list_next(it)) != NULL) {
+                /* Decrease TTL and remove balls whose lifetime has expired */
+                if (ball->ttl > 0) {
+                    ball->ttl--;
+                }
+                if (ball->ttl == 0) {
+                    list_remove(balls, ball);
+                    destroy_object(ball);
+                    continue;
+                }
                 int r = (int)((500.0f * ball->scale) + 10.0f);
 
                 /* Update physics */

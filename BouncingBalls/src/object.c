@@ -1,3 +1,4 @@
+/* Object module: creation, drawing and destruction of renderable objects. */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,9 +8,7 @@
 #include "object.h"
 
 
-/*
- * Return a newly created object based on the arguments provided.
- */
+/* Return a newly created object with default transform and velocity. */
 object_t *create_object(SDL_Surface *surface, triangle_t *model, int numtriangles)
 {
     object_t *object;
@@ -41,14 +40,13 @@ object_t *create_object(SDL_Surface *surface, triangle_t *model, int numtriangle
     object->ty = 0.0f;
     object->speedx = 0.0f;
     object->speedy = 0.0f;
+    /* Default TTL; callers may override for animation lifetime control. */
     object->ttl = 0;
 
     return object;
 }
 
-/*
- * Destroy the object, freeing the memory.
- */
+/* Destroy the object, freeing its model data and itself. */
 void destroy_object(object_t *object)
 {
     if (!object) {
@@ -59,9 +57,7 @@ void destroy_object(object_t *object)
     free(object);
 }
 
-/*
- * Draw the object on its surface.
- */
+/* Draw the object on its surface using its triangle model. */
 void draw_object(object_t *object)
 {
     int i;
