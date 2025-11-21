@@ -5,8 +5,6 @@
 # Prerequisites
 *.d
 *.idea/
-app/
-*.app/
 
 # Object files
 *.o
@@ -42,6 +40,7 @@ app/
 *.i*86
 *.x86_64
 *.hex
+BouncingBalls/src/app
 
 # Debug files
 *.dSYM/
@@ -168,5 +167,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+report.tex
 
 # End of https://www.toptal.com/developers/gitignore/api/c,cmake,macos,linux,windows,visualstudiocode

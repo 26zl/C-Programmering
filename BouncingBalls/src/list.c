@@ -1,4 +1,6 @@
-/* Singly linked list implementation with a simple iterator interface. */
+/*
+ * Singly linked list implementation with a simple iterator interface.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"

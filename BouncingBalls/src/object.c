@@ -1,4 +1,6 @@
-/* Object module: creation, drawing and destruction of renderable objects. */
+/*
+ * Object module: creation, drawing and destruction of renderable objects.
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,7 +42,7 @@ object_t *create_object(SDL_Surface *surface, triangle_t *model, int numtriangle
     object->ty = 0.0f;
     object->speedx = 0.0f;
     object->speedy = 0.0f;
-    /* Default TTL; callers may override for animation lifetime control. */
+    /* Default TTL; used as an absolute expiration timestamp in ms once set. */
     object->ttl = 0;
 
     return object;

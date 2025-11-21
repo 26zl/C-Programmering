@@ -1,3 +1,6 @@
+/*
+* Bouncing Balls Animation
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -67,8 +70,9 @@ void bouncing_balls(SDL_Window *window)
         fprintf(stderr, "Failed to create ball list.\n");
         return;
     }
-    /* Lifetime (in frames) for each ball before it disappears */
-    const unsigned int BALL_TTL_FRAMES = 300;
+    /* Remove balls 5 seconds after they have settled on the ground */
+    const unsigned int BALL_TTL = 5000;
+    const float REST_SPEED = 0.50f;
     /* Spawn 10 balls with random speeds */
     const int NUM_BALLS = 10;
     for (int i = 0; i < NUM_BALLS; i++) {
@@ -85,8 +89,8 @@ void bouncing_balls(SDL_Window *window)
         ball->ty     = (float)(rand() % usable_h) + 50.0f;
         ball->speedx = ((float)rand() / (float)RAND_MAX) * 100.0f - 50.0f; 
         ball->speedy = ((float)rand() / (float)RAND_MAX) * 80.0f  - 60.0f; 
-        /* Initialize per-ball time-to-live (TTL) */
-        ball->ttl    = BALL_TTL_FRAMES;
+        /* TTL starts when the ball comes to rest */
+        ball->ttl = 0;
         list_addlast(balls, ball);
     }
 
@@ -112,22 +116,20 @@ void bouncing_balls(SDL_Window *window)
         while (running) {
             /* Handle input events */
             SDL_Event e;
-            while (SDL_PollEvent(&e)) { /* https://wiki.libsdl.org/SDL2/SDL_PollEvent */
+            while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_QUIT)
                     running = 0;
                 if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
                     running = 0;
             }
             clear_screen(surface);
+            unsigned int current = SDL_GetTicks();
 
             /* Update and draw each ball */
             object_t *ball;
             while ((ball = list_next(it)) != NULL) {
-                /* Decrease TTL and remove balls whose lifetime has expired */
-                if (ball->ttl > 0) {
-                    ball->ttl--;
-                }
-                if (ball->ttl == 0) {
+                /* Remove balls whose lifetime after settling has expired */
+                if (ball->ttl > 0 && current >= ball->ttl) {
                     list_remove(balls, ball);
                     destroy_object(ball);
                     continue;
@@ -158,6 +160,23 @@ void bouncing_balls(SDL_Window *window)
                     ball->ty = surface->h - r;
                     ball->speedy = -ball->speedy * BOUNCE;
                 }
+                /* If the ball is resting on the ground, stop its motion and start/maintain TTL. */
+                int ground = (ball->ty + r >= surface->h - 1);
+                int resting = ground &&
+                              fabsf(ball->speedx) < REST_SPEED &&
+                              fabsf(ball->speedy) < REST_SPEED;
+                if (resting) {
+                    ball->speedx = 0.0f;
+                    ball->speedy = 0.0f;
+                    ball->ty = surface->h - r;
+                    if (ball->ttl == 0) {
+                        ball->ttl = current + BALL_TTL;
+                    }
+                } else if (ball->ttl != 0) {
+                    ball->ttl = 0;
+                } else {
+                    /* Ball is still moving */
+                }   
                 draw_object(ball);
             }
 
