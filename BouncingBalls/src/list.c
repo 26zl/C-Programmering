@@ -84,12 +84,14 @@ void list_addlast(list_t *list, void *item)
     }
 
     if (!list->head) {
+        /* Empty list: reuse addfirst so bookkeeping stays consistent. */
         list_addfirst(list, item);
         return;
     }
 
     tail = list->head;
-    while (tail->next) {
+    while (tail->next) { 
+        /* Walk to the current end before appending. */
         tail = tail->next;
     }
 
@@ -125,6 +127,7 @@ void list_remove(list_t *list, void *item)
                 list->head = node->next;
             }
 
+            /* Unlink the node; stored item lifetime is managed by caller. */
             free(node);
             list->numitems--;
             return;
@@ -183,7 +186,7 @@ void *list_next(list_iterator_t *iter)
     }
 
     current = iter->next;
-    iter->next = current->next;
+    iter->next = current->next; /* Advance before returning to allow safe removal. */
 
     return current->item;
 }

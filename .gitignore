@@ -168,6 +168,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-report.tex
+# Report files
+rapport/report.tex
+rapport/
 
 # End of https://www.toptal.com/developers/gitignore/api/c,cmake,macos,linux,windows,visualstudiocode

@@ -30,6 +30,7 @@ object_t *create_object(SDL_Surface *surface, triangle_t *model, int numtriangle
         return NULL;
     }
 
+    /* Deep-copy the mesh so every instance can evolve independently. */
     memcpy(object->model, model, sizeof(triangle_t) * numtriangles);
 
     object->surface = surface;
@@ -71,6 +72,7 @@ void draw_object(object_t *object)
     for (i = 0; i < object->numtriangles; i++) {
         triangle_t tri = object->model[i];
 
+        /* Apply the current transform to a local copy of the mesh. */
         tri.scale = object->scale;
         tri.rotation = object->rotation;
         tri.tx = (int)object->tx;
